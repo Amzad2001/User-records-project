@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registered Users</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #000000;
+        }
+        .table-container {
+            background-color: rgba(218, 203, 203, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 960px;
+        }
+        h1 {
+            text-align: left; /* Aligning the text to the left */
+            color: #2c2929;
+            padding-bottom: 20px;
+            margin-left: 20px; /* Added left margin for better positioning */
+            font-family: ba5;
+            font-size: 50px;
+            background: url(https://media.istockphoto.com/id/1703754111/photo/sunset-dramatic-sky-clouds.jpg?b=1&s=612x612&w=0&k=20&c=JCPokSz5PWGGJ--FFZkASZCp6eZZo0t26f3yMzWWW0g=);
+            background-clip: text;
+            color: transparent;
+            animation: move 1s infinite;
+        }
+        @keyframes move{
+            100%{
+                background-position-x: 500px;
+            }
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #087de4;
+            color: white;
+        }
+        input[type="text"], input[type="submit"], input[type="button"] {
+            width: 95%;
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input[type="submit"], input[type="button"] {
+            cursor: pointer;
+            background-color: #0679f4;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #0553f0;
+        }
+        .action-cell {
+            display: flex;
+            justify-content: flex-start;
+        }
+        form {
+            display: inline-flex;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="table-container">
+        <h1>User Records</h1>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Modify</th>
+            </tr>
+            {% for record in records %}
+            <tr>
+                <td>{{ record[0] }}</td>
+                <td><input type="text" id="name{{ record[0] }}" name="name" form="update{{ record[0] }}" value="{{ record[1] }}" readonly></td>
+                <td><input type="text" id="address{{ record[0] }}" name="address" form="update{{ record[0] }}" value="{{ record[2] }}" readonly></td>
+                <td class="action-cell">
+                    <form id="update{{ record[0] }}" action="/update" method="post">
+                        <input type="hidden" name="id" value="{{ record[0] }}">
+                        <input type="button" value="Edit" onclick="enableEditing('{{ record[0] }}')">
+                        <input type="submit" value="Update" >
+                    </form>
+                    <form action="/delete" method="post">
+                        <input type="hidden" name="id" value="{{ record[0] }}">
+                        <input type="submit" value="Delete" onclick="return confirmDeletion(event, '{{ record[0] }}')">
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+    <script>
+        function enableEditing(id) {
+            var nameInput = document.getElementById('name' + id);
+            var addressInput = document.getElementById('address' + id);
+
+            // Toggle read-only state
+            nameInput.readOnly = !nameInput.readOnly;
+            addressInput.readOnly = !addressInput.readOnly;
+
+               }
+
+        function confirmDeletion(event, id) {
+            var confirmAction = confirm('Are you sure you want to delete this record?');
+            if (!confirmAction) {
+                event.preventDefault(); // Prevent the form from being submitted if user cancels
+            }
+        }
+    </script>
+</body>
+</html>

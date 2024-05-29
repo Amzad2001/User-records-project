@@ -1,0 +1,240 @@
+
+
+
+_______---------------------------------_______________
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enter User Details</title>
+    <style>
+        h1 {
+            text-align: center;  
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: linear-gradient(to right, #6a11cb, #2575fc);
+            padding: 20px;
+            color: #000000;
+        }
+        form {
+            background-color: rgba(187, 87, 87, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            margin: auto;
+            transition: transform 0.3s ease-in-out;
+        }
+        input[type="text"], input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 2px solid #100d0d;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus, input[type="submit"]:focus {
+            border-color: #0056b3;
+        }
+        input[type="submit"] {
+            background-color: #0340fa;
+            color: rgb(224, 208, 208);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        input[type="submit"]:hover {
+            background-color: #0622f8;
+        }
+        .error {
+            color: #ff3860;
+            font-size: 0.85em;
+        }
+        form:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>Enter The User Details</h1>
+    <form id="registrationForm" method="post" action="/submit" onsubmit="return validateForm()">
+        ID: <input type="text" name="id" id="id" required>
+        <div class="error" id="idError"></div><br>
+        Name: <input type="text" name="name" id="name" required>
+        <div class="error" id="nameError"></div><br>
+        City: <input type="text" name="address" id="address" required>
+        <div class="error" id="placeError"></div><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        function validateForm() {
+            var valid = true;
+            document.getElementById('idError').textContent = '';
+            document.getElementById('nameError').textContent = '';
+            document.getElementById('placeError').textContent = '';
+
+            var id = document.getElementById('id').value;
+            var name = document.getElementById('name').value;
+            var place = document.getElementById('city').value;
+
+            if (!/^\d+$/.test(id)) {
+                document.getElementById('idError').textContent = 'ID must be numeric.';
+                valid = false;
+            }
+
+            if (!/^[a-zA-Z]+$/.test(name)) {
+                document.getElementById('nameError').textContent = 'Name must contain only letters.';
+                valid = false;
+            }
+
+            if (!/^[a-zA-Z]+$/.test(place)) {
+                document.getElementById('placeError').textContent = 'Place must contain only letters.';
+                valid = false;
+            }
+
+            return valid;
+        }
+    </script>
+</body>
+</html>
+
+
+_____________-------------------------__________________________
+
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registered Users</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            padding: 20px;
+            color: #fff;
+        }
+        h1 {
+            text-align: left; /* Align text to the left */
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin-top: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+        }
+        th, td {
+            border-bottom: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #087de4;
+        }
+        input[type="text"], input[type="submit"], input[type="button"] {
+            width: 95%; /* Adjusted for alignment purposes */
+            padding: 8px;
+            border-radius: 5px;
+            border: none;
+        }
+        input[type="text"] {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        input[type="submit"], input[type="button"] {
+            cursor: pointer;
+            background-color: #0679f4;
+            color: white;
+            transition: background-color 0.3s ease;
+            margin-right: 2px; /* Ensures spacing between buttons */
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #0553f0;
+        }
+        .action-cell {
+            display: flex; /* Flexbox to align buttons in a row */
+            justify-content: flex-start; /* Aligns items to the start of the cell */
+        }
+        form {
+            display: inline-flex; /* Inline flex to keep forms aligned without breaking */
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+    <script>
+        function enableEditing(id) {
+            var nameInput = document.getElementById('name' + id);
+            var addressInput = document.getElementById('address' + id);
+            var nameValue = nameInput.value.trim();
+            var addressValue = addressInput.value.trim();
+ 
+            // Validation for name and address fields
+            if (!isValidName(nameValue)) {
+                alert("Please enter a valid name.");
+                return;
+            }
+            if (!isValidAddress(addressValue)) {
+                alert("Please enter a valid address.");
+                return;
+            }
+ 
+            // Enable/disable editing
+            nameInput.readOnly = !nameInput.readOnly;
+            addressInput.readOnly = !addressInput.readOnly;
+        }
+ 
+        function isValidName(name) {
+            return /^[a-zA-Z\s]+$/.test(name);
+        }
+ 
+        function isValidAddress(address) {
+            return /^[a-zA-Z0-9\s,]+$/.test(address);
+        }
+        
+    </script>
+</head>
+<body>
+    <h1>User Records</h1>
+    <table>
+        <tr>
+            <th>ID </th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Modify</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ record[0] }}</td>
+            <td><input type="text" id="name{{ record[0] }}" name="name" form="update{{ record[0] }}" value="{{ record[1] }}" readonly></td>
+            <td><input type="text" id="address{{ record[0] }}" name="address" form="update{{ record[0] }}" value="{{ record[2] }}" readonly></td>
+            <td class="action-cell">
+                <form id="update{{ record[0] }}" action="/update" method="post">
+                    <input type="hidden" name="id" value="{{ record[0] }}">
+                    <input type="button" value="Edit" onclick="enableEditing('{{ record[0] }}')">
+                    <input type="submit" value="Update">
+                </form>
+                <form action="/delete" method="post">
+                    <input type="hidden" name="id" value="{{ record[0] }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Credentials Registered</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #ECF0F1;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            text-align: center;
+            color: #2980B9;
+        }
+        table {
+            width: flex;
+            border-collapse: collapse;
+            table-layout: fixed;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border-bottom: 2px solid #BDC3C7;
+            padding: 2px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498DB;
+            color: white;
+        }
+        input[type="text"], input[type="submit"], input[type="button"] {
+            padding: 5px 10px;
+            margin: 2px;
+            box-sizing: border-box;
+            width: 96%;
+            border-radius: 4px;
+            border: 1px solid #BDC3C7;
+        }
+        input[type="submit"], input[type="button"] {
+            background-color: #2ECC71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        input[type="submit"]:hover, input[type="button"]:hover {
+            background-color: #27AE60;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        #addUserButton {
+            display: block;
+            margin: 10px auto;
+            background-color: #2980B9;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #addUserButton:hover {
+            background-color: #3498DB;
+        }
+        #registerForm {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .close-button {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            border: none;
+            background: rgb(229, 12, 12);
+            cursor: pointer;
+            font-size: 16px;
+            color: #AAA;
+        }
+        .close-button:hover {
+            color: #141414;
+        }
+    </style>
+    <script>
+        function toggleEditing(id) {
+            var nameInput = document.getElementById('name' + id);
+            var addressInput = document.getElementById('address' + id);
+            var editButton = document.getElementById('editButton' + id);
+            var updateButton = document.getElementById('updateButton' + id);
+
+            if (nameInput.readOnly && addressInput.readOnly) {
+                nameInput.readOnly = false;
+                addressInput.readOnly = false;
+                editButton.style.display = 'none';
+                updateButton.style.display = '';
+            } else {
+                nameInput.readOnly = true;
+                addressInput.readOnly = true;
+                editButton.style.display = '';
+                updateButton.style.display = 'none';
+            }
+        }
+
+        function validateAndUpdate(id) {
+            var nameInput = document.getElementById('name' + id).value;
+            var addressInput = document.getElementById('address' + id).value;
+
+            if (/\d/.test(nameInput) || /\d/.test(addressInput)) {
+                alert('Name and Address should not contain numbers.');
+                return false;
+            }
+            return true;
+        }
+
+        function confirmDelete() {
+            return confirm("Are you sure you want to delete this row?");
+        }
+
+        function openForm() {
+            document.getElementById('registerForm').style.display = 'block';
+        }
+
+        function closeForm() {
+            document.getElementById('registerForm').style.display = 'none';
+        }
+
+        function validateForm() {
+            var id = document.getElementById('id').value;
+            var name = document.getElementById('name').value;
+            var address = document.getElementById('address').value;
+
+            if (!/^\d+$/.test(id)) {
+                alert("Please enter only numbers in ID.");
+                return false;
+            }
+            var existingIds = document.querySelectorAll('input[name="id"]');
+            for (var i = 0; i < existingIds.length; i++) {
+                if (existingIds[i].value === id) {
+                    var confirmUpdate = confirm("ID already exists. Do you want to update the existing record?");
+                    if (!confirmUpdate) {
+                        return false;
+                    } else {
+                        // If user confirms, allow the form submission
+                        closeForm(); // Close the form if updating existing record
+                        return true;
+                    }
+                }
+            }
+        
+            if (!/^[a-zA-Z\s]+$/.test(name)) {
+                alert("In Name, please enter alphabetic characters only.");
+                return false;
+            }
+            if (!/^[a-zA-Z\s]+$/.test(address)) {
+                alert("In Address, please enter alphabetic characters only.");
+                return false;
+            }
+            closeForm();
+            return true;
+        }
+    </script>
+</head>
+<body>
+    <h1>Credentials Registered</h1>
+    <button id="addUserButton" onclick="openForm()">Add User</button>
+    <div id="registerForm">
+        <button class="close-button" onclick="closeForm()">&times;</button>
+        <form action="/submit" method="post" onsubmit="return validateForm()">
+            <input type="text" name="id" id="id" placeholder="ID" required><br><br>
+            <input type="text" name="name" id="name" placeholder="Name" required><br><br>
+            <input type="text" name="address" id="address" placeholder="Address" required><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <!-- Include your table here -->
+    <table>
+        <tr>
+            <th>#</th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Actions</th>
+        </tr>
+        {% for record in records %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ record[0] }}</td>
+            <td>
+                <div class="input-group">
+                    <input type="text" id="name{{ record[0] }}" name="name" form="update{{ record[0] }}" value="{{ record[1] }}" readonly>
+                </div>
+            </td>
+            <td>
+                <div class="input-group">
+                    <input type="text" id="address{{ record[0] }}" name="address" form="update{{ record[0] }}" value="{{ record[2] }}" readonly>
+                </div>
+            </td>
+            <td>
+                <form id="update{{ record[0] }}" action="/update" method="post" onsubmit="return validateAndUpdate('{{ record[0] }}')">
+                    <input type="hidden" name="id" value="{{ record[0] }}">
+                    <input type="button" id="editButton{{ record[0] }}" value="Edit" onclick="toggleEditing('{{ record[0] }}')">
+                    <input type="submit" id="updateButton{{ record[0] }}" value="Update" style="display:none;">
+                    <i class="fa-solid fa-pen-to-square"></i>
+                </form>
+                <form action="/delete" method="post" onsubmit="return confirmDelete();">
+                    <input type="hidden" name="id" value="{{ record[0] }}">
+                    <input type="submit" value="Delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
